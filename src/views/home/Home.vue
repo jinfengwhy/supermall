@@ -26,7 +26,12 @@
     data() {
       return {
         banners: [],
-        recommends: []
+        recommends: [],
+        goods: {
+          pop: {page: 0, list: []},  // 流行
+          news: {page: 0, list: []},  // 新款
+          sell: {page: 0, list: []}  // 精选
+        }
       }
     },
     components: {
