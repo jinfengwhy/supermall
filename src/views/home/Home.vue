@@ -8,10 +8,23 @@
 
 <script>
   import NavBar from 'components/common/navbar/NavBar'
+  import { getHomeMultiData } from 'network/home'
 
   export default {
+    data() {
+      return {
+        banners: [],
+        recommends: []
+      }
+    },
     components: {
       NavBar
+    },
+    created() {
+      getHomeMultiData().then(res => {
+        this.banners = res.data.banner.list
+        this.recommends = res.data.recommend.list
+      })
     }
   }
 </script>
