@@ -6,8 +6,10 @@
     <home-swiper :banners="banners"/>
     <recommend-view :recommends="recommends"/>
     <feature-view/>
-    <tab-control class="tab-control" :titles="['流行', '新款', '精选']"/>
-    <goods-list :goods="goods['pop'].list"/>
+    <tab-control class="tab-control" 
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"/>
+    <goods-list :goods="showGoods"/>
 
     <div style="width: 100%;height:1000px;"></div>
   </div>
@@ -33,7 +35,13 @@
           pop: {page: 0, list: []},  // 流行
           new: {page: 0, list: []},  // 新款
           sell: {page: 0, list: []}  // 精选
-        }
+        },
+        currentType: 'pop'
+      }
+    },
+    computed: {
+      showGoods() {
+        return this.goods[this.currentType].list;
       }
     },
     components: {
@@ -54,6 +62,27 @@
       this.getHomeGoods('sell')
     },
     methods: {
+      /**
+       * 事件监听相关的方法
+       */
+      tabClick(index) {
+        console.log(index);
+        switch(index) {
+          case 0:
+            this.currentType = 'pop'
+            break
+          case 1:
+            this.currentType = 'new'
+            break
+          case 2:
+            this.currentType = 'sell'
+            break
+        }
+      },
+
+      /**
+       * 网络请求相关的方法
+       */
       getHomeMultiData() {
         getHomeMultiData().then(res => {
           this.banners = res.data.banner.list
