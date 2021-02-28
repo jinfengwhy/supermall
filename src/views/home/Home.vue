@@ -7,6 +7,7 @@
     <recommend-view :recommends="recommends"/>
     <feature-view/>
     <tab-control class="tab-control" :titles="['流行', '新款', '精选']"/>
+    <goods-list :goods="goods['pop'].list"/>
 
     <div style="width: 100%;height:1000px;"></div>
   </div>
@@ -19,6 +20,7 @@
 
   import NavBar from 'components/common/navbar/NavBar'
   import TabControl from 'components/content/TabControl/TabControl'
+  import GoodsList from 'components/content/Goods/GoodsList'
 
   import { getHomeMultiData, getHomeGoods } from 'network/home'
 
@@ -39,7 +41,8 @@
       RecommendView,
       FeatureView,
       NavBar,
-      TabControl
+      TabControl,
+      GoodsList
     },
     created() {
       // 1. 请求多个数据
@@ -85,5 +88,6 @@
   .tab-control {
     position: sticky;
     top: 44px;
+    z-index: 9;
   }
 </style>
