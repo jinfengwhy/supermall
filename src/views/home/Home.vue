@@ -4,14 +4,18 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control ref="tabControl1" class="tab-control"
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+      v-show="isTabFixed"/>
 
     <scroll class="content" ref="scroll" 
       :probe-type="3" @scroll="contentScroll"
       :pull-up-load="true" @pullingUp="loadMore">
-      <home-swiper :banners="banners"/>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
-      <tab-control ref="tabControl"
+      <tab-control ref="tabControl2"
         :titles="['流行', '新款', '精选']"
         @tabClick="tabClick"/>
       <goods-list :goods="showGoods"/>
@@ -47,7 +51,9 @@
           sell: {page: 0, list: []}  // 精选
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0,
+        isTabFixed: false
       }
     },
     computed: {
@@ -82,10 +88,6 @@
       this.$bus.$on('itemImgLoad', () => {
         refresh()
       })
-
-      // 2.获取tabControl的offsetTop
-      // 所有的组件都有一个属性$el: 用于获取组件中的元素
-      console.log(this.$refs.tabControl.$el.offsetTop);
     },
     methods: {
       /**
@@ -103,15 +105,25 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.tabControl1.currentIndex = index
+        this.$refs.tabControl2.currentIndex = index
       },
       backClick() {
         this.$refs.scroll.scrollTo(0, 0)
       },
       contentScroll(position) {
+        // 1.判断是否要显示backTop图标
         this.isShowBackTop = (-position.y) > 1000
+
+        // 2.判断是否要产生吸顶效果
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
       loadMore() {
         this.getHomeGoods(this.currentType)
+      },
+      swiperImageLoad() {  
+        // 所有的组件都有一个属性$el: 用于获取组件中的元素
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
       },
 
       /**
@@ -145,11 +157,13 @@
     background-color: var(--color-tint);
     color: white;
 
-    position: fixed;
+    /* 使用fixed布局是为了在浏览器的原生滚动中不随内容进行滚动
+    使用better-scroll实现局部滚动后就用不着这段样式了 */
+    /* position: fixed;
     left: 0;
     right: 0;
     top: 0;
-    z-index: 9;
+    z-index: 9; */
   }
   .content {
     overflow: hidden;
@@ -166,4 +180,8 @@
     height: calc(100% - 44px - 49px);
     margin-top: 44px;
   } */
+  .tab-control {
+    position: relative;
+    z-index: 9;
+  }
 </style>
