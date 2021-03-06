@@ -6,7 +6,8 @@
     </nav-bar>
 
     <scroll class="content" ref="scroll" 
-      :probe-type="3" @scroll="contentScroll">
+      :probe-type="3" @scroll="contentScroll"
+      :pull-up-load="true" @pullingUp="loadMore">
       <home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
@@ -33,6 +34,7 @@
   import BackTop from 'components/content/BackTop/BackTop'
 
   import { getHomeMultiData, getHomeGoods } from 'network/home'
+  import { debounce } from 'common/utils'
 
   export default {
     data() {
@@ -75,7 +77,7 @@
     mounted() {
       // 在created钩子中通过$refs去引用时对象可能为空，只是创建了实例
       // 在mounted钩子中通过$refs去引用时，值是存在的，template模板已挂载
-      const refresh = this.debounce(this.$refs.scroll.refresh, 200)
+      const refresh = debounce(this.$refs.scroll.refresh, 200)
       this.$bus.$on('itemImgLoad', () => {
         refresh()
       })
@@ -84,15 +86,6 @@
       /**
        * 事件监听相关的方法
        */
-      debounce(func, delay) {
-        let timer = null
-        return function(...args) {
-          if (timer) clearTimeout(timer)
-          timer = setTimeout(() => {
-            func.apply(this, args)
-          }, delay)
-        }
-      },
       tabClick(index) {
         switch(index) {
           case 0:
@@ -112,6 +105,9 @@
       contentScroll(position) {
         this.isShowBackTop = (-position.y) > 1000
       },
+      loadMore() {
+        this.getHomeGoods(this.currentType)
+      },
 
       /**
        * 网络请求相关的方法
@@ -127,6 +123,8 @@
         getHomeGoods(type, page).then(res => {
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
+
+          this.$refs.scroll.finishPullUp()
         })
       }
     }
