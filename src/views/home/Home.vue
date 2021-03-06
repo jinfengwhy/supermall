@@ -71,8 +71,10 @@
       this.getHomeGoods('pop')
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
-
-      // 3. 监听item中图片加载完成
+    },
+    mounted() {
+      // 在created钩子中通过$refs去引用时对象可能为空，只是创建了实例
+      // 在mounted钩子中通过$refs去引用时，值是存在的，template模板已挂载
       this.$bus.$on('itemImgLoad', () => {
         this.$refs.scroll.refresh()
       })
