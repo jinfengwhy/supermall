@@ -5,7 +5,7 @@
       <div slot="center">购物街</div>
     </nav-bar>
 
-    <scroll class="content" ref="scroll">
+    <scroll class="content" ref="scroll" :probeType="3" @scroll="contentScroll">
       <home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
@@ -15,7 +15,7 @@
       <goods-list :goods="showGoods"/>
     </scroll>
     
-    <back-top @click.native="backClick"/>
+    <back-top v-show="isShowBackTop" @click.native="backClick"/>
 
   </div>
 </template>
@@ -43,7 +43,8 @@
           new: {page: 0, list: []},  // 新款
           sell: {page: 0, list: []}  // 精选
         },
-        currentType: 'pop'
+        currentType: 'pop',
+        isShowBackTop: false
       }
     },
     computed: {
@@ -75,7 +76,6 @@
        * 事件监听相关的方法
        */
       tabClick(index) {
-        console.log(index);
         switch(index) {
           case 0:
             this.currentType = 'pop'
@@ -90,6 +90,9 @@
       },
       backClick() {
         this.$refs.scroll.scrollTo(0, 0)
+      },
+      contentScroll(position) {
+        this.isShowBackTop = (-position.y) > 1000
       },
 
       /**
@@ -114,7 +117,6 @@
 
 <style scoped>
   #home {
-    padding-top: 44px;
     height: 100vh;
     position: relative;
   }
@@ -137,6 +139,12 @@
     left: 0px;
     right: 0px;
   }
+  /* 第二种方案计算响应的高度 */
+  /* .content {
+    overflow: hidden;
+    height: calc(100% - 44px - 49px);
+    margin-top: 44px;
+  } */
   .tab-control {
     position: sticky;
     top: 44px;
