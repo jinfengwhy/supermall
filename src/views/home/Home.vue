@@ -1,9 +1,11 @@
 <template>
   <div id="home">
+    
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content">
+
+    <scroll class="content" ref="scroll">
       <home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
@@ -12,6 +14,9 @@
         @tabClick="tabClick"/>
       <goods-list :goods="showGoods"/>
     </scroll>
+    
+    <back-top @click.native="backClick"/>
+
   </div>
 </template>
 
@@ -24,6 +29,7 @@
   import Scroll from 'components/common/scroll/Scroll'
   import TabControl from 'components/content/TabControl/TabControl'
   import GoodsList from 'components/content/Goods/GoodsList'
+  import BackTop from 'components/content/BackTop/BackTop'
 
   import { getHomeMultiData, getHomeGoods } from 'network/home'
 
@@ -52,7 +58,8 @@
       NavBar,
       Scroll,
       TabControl,
-      GoodsList
+      GoodsList,
+      BackTop
     },
     created() {
       // 1. 请求多个数据
@@ -80,6 +87,9 @@
             this.currentType = 'sell'
             break
         }
+      },
+      backClick() {
+        this.$refs.scroll.scrollTo(0, 0)
       },
 
       /**
