@@ -19,10 +19,6 @@
       probeType: {
         type: Number,
         default: 0
-      },
-      pullUpLoad: {
-        type: Boolean,
-        default: false
       }
     },
     mounted() {
@@ -35,18 +31,11 @@
         // 0,1都是不侦测实时的位置
         // 2: 在手指滚动的过程中侦测, 手指离开后的惯性滚动过程中不侦测.
         // 3: 只要是滚动, 都侦测.
-        probeType: this.probeType,
-
-        // 是否监听上拉加载更多
-        pullUpLoad: this.pullUpLoad
+        probeType: this.probeType
       })
 
       this.scroll.on('scroll', position => {
         this.$emit('scroll', position)
-      })
-
-      this.scroll.on('pullingUp', () => {
-        this.$emit('pullingUp')
       })
     },
     methods: {
