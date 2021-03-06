@@ -11,7 +11,7 @@
       <home-swiper :banners="banners"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
-      <tab-control class="tab-control" 
+      <tab-control ref="tabControl"
         :titles="['流行', '新款', '精选']"
         @tabClick="tabClick"/>
       <goods-list :goods="showGoods"/>
@@ -75,12 +75,17 @@
       this.getHomeGoods('sell')
     },
     mounted() {
+      // 1.图片加载完成的事件监听
       // 在created钩子中通过$refs去引用时对象可能为空，只是创建了实例
       // 在mounted钩子中通过$refs去引用时，值是存在的，template模板已挂载
       const refresh = debounce(this.$refs.scroll.refresh, 200)
       this.$bus.$on('itemImgLoad', () => {
         refresh()
       })
+
+      // 2.获取tabControl的offsetTop
+      // 所有的组件都有一个属性$el: 用于获取组件中的元素
+      console.log(this.$refs.tabControl.$el.offsetTop);
     },
     methods: {
       /**
@@ -161,9 +166,4 @@
     height: calc(100% - 44px - 49px);
     margin-top: 44px;
   } */
-  .tab-control {
-    position: sticky;
-    top: 44px;
-    z-index: 9;
-  }
 </style>
