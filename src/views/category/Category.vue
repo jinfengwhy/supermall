@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" refs="aaa">
+  <div class="wrapper" ref="aaa">
     <ul class="content">
       <li>列表数据1</li>
       <li>列表数据2</li>
