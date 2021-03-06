@@ -75,14 +75,24 @@
     mounted() {
       // 在created钩子中通过$refs去引用时对象可能为空，只是创建了实例
       // 在mounted钩子中通过$refs去引用时，值是存在的，template模板已挂载
+      const refresh = this.debounce(this.$refs.scroll.refresh, 200)
       this.$bus.$on('itemImgLoad', () => {
-        this.$refs.scroll.refresh()
+        refresh()
       })
     },
     methods: {
       /**
        * 事件监听相关的方法
        */
+      debounce(func, delay) {
+        let timer = null
+        return function(...args) {
+          if (timer) clearTimeout(timer)
+          timer = setTimeout(() => {
+            func.apply(this, args)
+          }, delay)
+        }
+      },
       tabClick(index) {
         switch(index) {
           case 0:
