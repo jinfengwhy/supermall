@@ -3,14 +3,16 @@
     <detail-nav-bar/>
     <detail-swiper :top-images="topImages"/>
     <detail-base-info :goods="goods"/>
+    <detail-shop-info :shop="shop"/>
   </div>
 </template>
 
 <script>
-import {getDetail, Goods} from 'network/detail'
+import {getDetail, Goods, Shop} from 'network/detail'
 import DetailNavBar from './childComps/DetailNavBar'
 import DetailSwiper from './childComps/DetailSwiper'
 import DetailBaseInfo from './childComps/DetailBaseInfo'
+import DetailShopInfo from './childComps/DetailShopInfo'
 
 export default {
   name: 'Detail',
@@ -18,13 +20,15 @@ export default {
     return {
       iid: null,
       topImages: [],
-      goods: {}
+      goods: {},
+      shop: {}
     }
   },
   components: {
     DetailNavBar,
     DetailSwiper,
-    DetailBaseInfo
+    DetailBaseInfo,
+    DetailShopInfo
   },
   created() {
     // 1.保存传过来的商品id
@@ -34,8 +38,12 @@ export default {
     getDetail(this.iid).then(res => {
       console.log(res);
       const data = res.result
+      // 1.获取顶部的轮播图
       this.topImages = data.itemInfo.topImages
+      // 2.获取商品信息
       this.goods = new Goods(data.itemInfo, data.columns, data.shopInfo.services)
+      // 3.获取店铺信息
+      this.shop = new Shop(data.shopInfo)
     })
   }
 }
