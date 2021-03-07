@@ -1,18 +1,23 @@
 <template>
   <div id="detail">
-    <detail-nav-bar/>
-    <detail-swiper :top-images="topImages"/>
-    <detail-base-info :goods="goods"/>
-    <detail-shop-info :shop="shop"/>
+    <detail-nav-bar class="detail-nav"/>
+    <scroll class="content">
+      <detail-swiper :top-images="topImages"/>
+      <detail-base-info :goods="goods"/>
+      <detail-shop-info :shop="shop"/>
+    </scroll>
   </div>
 </template>
 
 <script>
 import {getDetail, Goods, Shop} from 'network/detail'
+
 import DetailNavBar from './childComps/DetailNavBar'
 import DetailSwiper from './childComps/DetailSwiper'
 import DetailBaseInfo from './childComps/DetailBaseInfo'
 import DetailShopInfo from './childComps/DetailShopInfo'
+
+import Scroll from 'components/common/scroll/Scroll'
 
 export default {
   name: 'Detail',
@@ -28,7 +33,8 @@ export default {
     DetailNavBar,
     DetailSwiper,
     DetailBaseInfo,
-    DetailShopInfo
+    DetailShopInfo,
+    Scroll
   },
   created() {
     // 1.保存传过来的商品id
@@ -48,3 +54,21 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  #detail {
+    position: relative;
+    z-index: 9;
+    background: #fff;
+    height: 100vh;
+  } 
+  /* .detail-nav {
+    position: relative;
+    z-index: 9;
+    background: #fff;
+  } */
+  .content {
+    height: calc(100% - 44px);
+    overflow: hidden;
+  }
+</style>
