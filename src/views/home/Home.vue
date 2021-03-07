@@ -53,7 +53,8 @@
         currentType: 'pop',
         isShowBackTop: false,
         tabOffsetTop: 0,
-        isTabFixed: false
+        isTabFixed: false,
+        saveY: 0
       }
     },
     computed: {
@@ -88,6 +89,18 @@
       this.$bus.$on('itemImgLoad', () => {
         refresh()
       })
+    },
+    destroyed() {
+      console.log('home destroyed');
+    },
+    activated() {
+      // 再次进来时滚动到之前的位置，无延迟时间
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+      this.$refs.scroll.refresh()
+    },
+    deactivated() {
+      // 离开时保存滚动条的位置
+      this.saveY = this.$refs.scroll.getScrollY()
     },
     methods: {
       /**
