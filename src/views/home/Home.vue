@@ -38,7 +38,7 @@
   import BackTop from 'components/content/BackTop/BackTop'
 
   import { getHomeMultiData, getHomeGoods } from 'network/home'
-  import { debounce } from 'common/utils'
+  import { itemListenerMixin } from 'common/mixin'
 
   export default {
     data() {
@@ -57,6 +57,7 @@
         saveY: 0
       }
     },
+    mixins: [itemListenerMixin],
     computed: {
       showGoods() {
         return this.goods[this.currentType].list;
@@ -81,15 +82,6 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
-    mounted() {
-      // 1.图片加载完成的事件监听
-      // 在created钩子中通过$refs去引用时对象可能为空，只是创建了实例
-      // 在mounted钩子中通过$refs去引用时，值是存在的，template模板已挂载
-      const refresh = debounce(this.$refs.scroll.refresh, 200)
-      this.$bus.$on('itemImgLoad', () => {
-        refresh()
-      })
-    },
     destroyed() {
       console.log('home destroyed');
     },
@@ -99,8 +91,11 @@
       this.$refs.scroll.refresh()
     },
     deactivated() {
-      // 离开时保存滚动条的位置
+      // 1.离开时保存滚动条的位置
       this.saveY = this.$refs.scroll.getScrollY()
+
+      // 2.离开页面时取消对该事件的监听
+      this.$bus.$off('itemImgLoad', this.itemImgListener)
     },
     methods: {
       /**

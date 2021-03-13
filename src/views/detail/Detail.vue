@@ -27,6 +27,8 @@ import DetailCommentInfo from './childComps/DetailCommentInfo'
 import Scroll from 'components/common/scroll/Scroll'
 import GoodsList from 'components/content/Goods/GoodsList'
 
+import {itemListenerMixin} from 'common/mixin'
+
 export default {
   name: 'Detail',
   data() {
@@ -41,6 +43,7 @@ export default {
       recommends: []
     }
   },
+  mixins: [itemListenerMixin],
   components: {
     DetailNavBar,
     DetailSwiper,
@@ -79,6 +82,9 @@ export default {
     getRecommend().then(res => {
       this.recommends = res.data.list
     })
+  },
+  destroyed() {
+    this.$bus.$off('itemImgLoad', this.itemImgListener)
   },
   methods: {
     imageLoad() {
