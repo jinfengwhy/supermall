@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="goodsItem.show.img" @load="imageLoad"/>
+    <img :src="showImage" @load="imageLoad"/>
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -17,6 +17,13 @@ export default {
       default() {
         return {}
       }
+    }
+  },
+  computed: {
+    showImage() {
+      // 注意这里逻辑或的用法 条件一 || 条件二 ，如果条件一存在则返回条件一
+      // 如果条件一不存在，则返回条件二，返回的结果不是布尔类型而是图片的字符串路径
+      return this.goodsItem.image || this.goodsItem.show.img
     }
   },
   methods: {
