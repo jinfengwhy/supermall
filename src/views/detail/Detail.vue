@@ -88,7 +88,8 @@ export default {
   },
   methods: {
     imageLoad() {
-      this.$refs.scroll.refresh()
+      // 直接调用混入对象中的newRefresh
+      this.newRefresh();
     }
   }
 }
