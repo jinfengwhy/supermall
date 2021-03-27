@@ -11,7 +11,7 @@
       <detail-comment-info ref="comments" :comment-info="commentInfo"/>
       <goods-list ref="recommends" :goods="recommends"/>
     </scroll>
-    <detail-bottom-bar/>
+    <detail-bottom-bar @addToCart="addToCart"/>
     <back-top v-show="isShowBackTop" @click.native="backClick"/>
   </div>
 </template>
@@ -132,6 +132,17 @@ export default {
       
       // 2. 判断是否要显示backTop图标
       this.listenBackTop(position)
+    },
+    addToCart() {
+      // 1. 获取购物车需要展示的信息
+      const product = {}
+      product.iid = this.iid
+      product.image = this.topImages[0]
+      product.title = this.goods.title
+      product.desc = this.goods.desc
+      product.price = this.goods.realPrice
+
+      console.log(product);
     }
   }
 }
