@@ -95,6 +95,7 @@ export default {
       this.themeTopYs.push(this.$refs.params.$el.offsetTop)
       this.themeTopYs.push(this.$refs.comments.$el.offsetTop)
       this.themeTopYs.push(this.$refs.recommends.$el.offsetTop)
+      this.themeTopYs.push(Number.MAX_VALUE)
       console.log(this.themeTopYs);
     }, 200)
   },
@@ -115,10 +116,9 @@ export default {
     contentScroll(position) {
       const positionY = -position.y
       let length = this.themeTopYs.length
-      for(let i = 0; i < length; i++) {
+      for(let i = 0; i < length - 1; i++) {
         if ((this.currentIndex != i) && (
-          (i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1]) 
-          || (i === length - 1 && positionY >= this.themeTopYs[i])
+          (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])
         )) {
           this.currentIndex = i
           this.$refs.nav.currentIndex = this.currentIndex
