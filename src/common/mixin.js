@@ -1,5 +1,7 @@
 import { debounce } from 'common/utils'
 
+import BackTop from 'components/content/BackTop/BackTop'
+
 export const itemListenerMixin = {
   data() {
     return {
@@ -31,5 +33,24 @@ export const itemListenerMixin = {
     // 虽然itemImgLoad事件被触发了多次
     // 但是newRefresh只会被赋值一次，itemImgListener也只会被赋值一次
     // 这与直接把方法放置到methods钩子函数中是有区别的
+  }
+}
+
+export const backTopMixin = {
+  data() {
+    return {
+      isShowBackTop: false,
+    }
+  },
+  components: {
+    BackTop
+  },
+  methods: {
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0)
+    },
+    listenBackTop(position) {
+      this.isShowBackTop = (-position.y) > 1000
+    }
   }
 }

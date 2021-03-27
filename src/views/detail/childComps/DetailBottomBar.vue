@@ -43,7 +43,6 @@
     bottom: 0; */
     /* 很多时候，也可以使用其它方式替代fixed */
     position: relative;
-    bottom: 58px;
 
     display: flex;
     text-align: center;

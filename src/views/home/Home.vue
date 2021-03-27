@@ -35,10 +35,9 @@
   import Scroll from 'components/common/scroll/Scroll'
   import TabControl from 'components/content/TabControl/TabControl'
   import GoodsList from 'components/content/Goods/GoodsList'
-  import BackTop from 'components/content/BackTop/BackTop'
 
   import { getHomeMultiData, getHomeGoods } from 'network/home'
-  import { itemListenerMixin } from 'common/mixin'
+  import { itemListenerMixin, backTopMixin } from 'common/mixin'
 
   export default {
     data() {
@@ -51,13 +50,12 @@
           sell: {page: 0, list: []}  // 精选
         },
         currentType: 'pop',
-        isShowBackTop: false,
         tabOffsetTop: 0,
         isTabFixed: false,
         saveY: 0
       }
     },
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     computed: {
       showGoods() {
         return this.goods[this.currentType].list;
@@ -70,8 +68,7 @@
       NavBar,
       Scroll,
       TabControl,
-      GoodsList,
-      BackTop
+      GoodsList
     },
     created() {
       // 1. 请求多个数据
@@ -116,12 +113,9 @@
         this.$refs.tabControl1.currentIndex = index
         this.$refs.tabControl2.currentIndex = index
       },
-      backClick() {
-        this.$refs.scroll.scrollTo(0, 0)
-      },
       contentScroll(position) {
         // 1.判断是否要显示backTop图标
-        this.isShowBackTop = (-position.y) > 1000
+        this.listenBackTop(position)
 
         // 2.判断是否要产生吸顶效果
         this.isTabFixed = (-position.y) > this.tabOffsetTop

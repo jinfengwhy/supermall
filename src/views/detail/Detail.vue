@@ -12,6 +12,7 @@
       <goods-list ref="recommends" :goods="recommends"/>
     </scroll>
     <detail-bottom-bar/>
+    <back-top v-show="isShowBackTop" @click.native="backClick"/>
   </div>
 </template>
 
@@ -30,7 +31,7 @@ import DetailBottomBar from './childComps/DetailBottomBar'
 import Scroll from 'components/common/scroll/Scroll'
 import GoodsList from 'components/content/Goods/GoodsList'
 
-import {itemListenerMixin} from 'common/mixin'
+import {itemListenerMixin, backTopMixin} from 'common/mixin'
 import {debounce} from 'common/utils'
 
 export default {
@@ -50,7 +51,7 @@ export default {
       currentIndex: 0
     }
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   components: {
     DetailNavBar,
     DetailSwiper,
@@ -117,6 +118,7 @@ export default {
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)
     },
     contentScroll(position) {
+      // 1. 将滚动内容与title的显示关联起来
       const positionY = -position.y
       let length = this.themeTopYs.length
       for(let i = 0; i < length - 1; i++) {
@@ -127,6 +129,9 @@ export default {
           this.$refs.nav.currentIndex = this.currentIndex
         }
       }
+      
+      // 2. 判断是否要显示backTop图标
+      this.listenBackTop(position)
     }
   }
 }
@@ -145,7 +150,7 @@ export default {
     background: #fff;
   } */
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 58px);
     overflow: hidden;
   }
 </style>
