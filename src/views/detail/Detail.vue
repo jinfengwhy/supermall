@@ -142,7 +142,8 @@ export default {
       product.desc = this.goods.desc
       product.price = this.goods.realPrice
 
-      console.log(product);
+      // 2. 添加到vuex当中
+      this.$store.commit('addCart', product)
     }
   }
 }
