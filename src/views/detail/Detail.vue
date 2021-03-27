@@ -1,14 +1,14 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav"/>
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
     <scroll class="content" ref="scroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
       <detail-goods-info :detailInfo="detailInfo" @imageLoad="imageLoad"/>
-      <detail-param-info :paramInfo="paramInfo"/>
-      <detail-comment-info :comment-info="commentInfo"/>
-      <goods-list :goods="recommends"/>
+      <detail-param-info ref="params" :paramInfo="paramInfo"/>
+      <detail-comment-info ref="comments" :comment-info="commentInfo"/>
+      <goods-list ref="recommends" :goods="recommends"/>
     </scroll>
   </div>
 </template>
@@ -28,6 +28,7 @@ import Scroll from 'components/common/scroll/Scroll'
 import GoodsList from 'components/content/Goods/GoodsList'
 
 import {itemListenerMixin} from 'common/mixin'
+import {debounce} from 'common/utils'
 
 export default {
   name: 'Detail',
@@ -40,7 +41,9 @@ export default {
       detailInfo: {},
       paramInfo: {},
       commentInfo: {},
-      recommends: []
+      recommends: [],
+      themeTopYs: [],
+      getThemeTopYs: null
     }
   },
   mixins: [itemListenerMixin],
@@ -82,6 +85,16 @@ export default {
     getRecommend().then(res => {
       this.recommends = res.data.list
     })
+  
+    // 4.给themeTopYs赋值
+    this.getThemeTopYs = debounce(() => {
+      this.themeTopYs = []
+      this.themeTopYs.push(0)
+      this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.comments.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.recommends.$el.offsetTop)
+      console.log(this.themeTopYs);
+    }, 200)
   },
   destroyed() {
     this.$bus.$off('itemImgLoad', this.itemImgListener)
@@ -89,7 +102,13 @@ export default {
   methods: {
     imageLoad() {
       // 直接调用混入对象中的newRefresh
-      this.newRefresh();
+      this.newRefresh()
+
+      // 等图片加载完毕后获取子组件的offsetTop，并且加了防抖
+      this.getThemeTopYs()
+    },
+    titleClick(index) {
+      this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)
     }
   }
 }

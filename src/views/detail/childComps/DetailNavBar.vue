@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       currentIndex: 0,
-      titles: ['商品', '参数', '评论', '详情']
+      titles: ['商品', '参数', '评论', '推荐']
     }
   },
   components: {
@@ -29,6 +29,7 @@ export default {
   methods: {
     titleClick(index) {
       this.currentIndex = index
+      this.$emit('titleClick', index)
     },
     backClick() {
       this.$router.back()
