@@ -6,9 +6,10 @@
 
 <script>
 export default {
-  data() {
-    return {
-      isChecked: true
+  props: {
+    isChecked: {
+      type: Boolean,
+      default: false
     }
   }
 }
