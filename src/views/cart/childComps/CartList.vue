@@ -29,7 +29,8 @@ export default {
 
 <style scoped>
   .cart-list {
-    height: calc(100% - 44px - 49px);
+    /* 44px是topbar 49px是tabbar 40px是bottombar */
+    height: calc(100% - 44px - 49px - 40px);
     overflow: hidden;
   }
 </style>>

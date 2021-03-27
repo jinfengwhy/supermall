@@ -4,6 +4,7 @@
       <div slot="center">购物车({{length}})</div>
     </nav-bar>
     <cart-list/>
+    <cart-bottom-bar/>
   </div>
 </template>
 
@@ -13,11 +14,13 @@ import {mapGetters} from 'vuex'
 import NavBar from 'components/common/navbar/NavBar'
 
 import CartList from './childComps/CartList'
+import CartBottomBar from './childComps/CartBottomBar'
 
 export default {
   components: {
     NavBar,
-    CartList
+    CartList,
+    CartBottomBar
   },
   computed: {
     // 语法一：使用数组
