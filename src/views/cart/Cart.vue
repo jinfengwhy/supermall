@@ -3,6 +3,7 @@
     <nav-bar class="nav-bar">
       <div slot="center">购物车({{length}})</div>
     </nav-bar>
+    <cart-list/>
   </div>
 </template>
 
@@ -11,9 +12,12 @@ import {mapGetters} from 'vuex'
 
 import NavBar from 'components/common/navbar/NavBar'
 
+import CartList from './childComps/CartList'
+
 export default {
   components: {
-    NavBar
+    NavBar,
+    CartList
   },
   computed: {
     // 语法一：使用数组
@@ -29,6 +33,9 @@ export default {
 </script>
 
 <style scoped>
+  #cart {
+    height: 100vh;
+  }
   .nav-bar {
     background: var(--color-tint);
     color: #fff;
