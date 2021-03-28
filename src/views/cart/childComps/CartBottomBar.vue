@@ -2,7 +2,7 @@
   <div class="bottom-bar">
     <div class="check-content">
       <check-button class="check-button"
-        :isChecked="allChecked"
+        :isChecked="isCheckAll"
         @click.native='btnClick'/>
       <span>全选</span>
     </div>
@@ -10,12 +10,14 @@
       合计:{{totalPrice}}
     </div>
     <div class="to-calc">
-      去计算({{totalCount}})
+      去计算({{checkLength}})
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import CheckButton from 'components/content/CheckButton/CheckButton'
 
 export default {
@@ -23,18 +25,22 @@ export default {
     CheckButton 
   },
   computed: {
+    ...mapGetters(['cartList']),
     totalPrice() {
-      return '￥' + this.$store.getters.cartList.filter(item => {
+      return '￥' + this.cartList.filter(item => {
         return item.checked
       }).reduce((preValue, item) => {
         return preValue + item.count * item.price
       }, 0).toFixed(2)
     },
-    totalCount() {
-      return this.$store.getters.cartList.filter(item => item.checked).length
+    checkLength() {
+      return this.cartList.filter(item => item.checked).length
     },
-    allChecked() {
-      return this.$store.getters.cartList.every(item => item.checked)
+    isCheckAll() {
+      if (this.cartList.length === 0) return
+      // 全选中 find返回false 取反为true
+      // 大于等于1个未选中 find返回true 取反为false
+      return !this.cartList.find(item => !item.checked)
     }
   },
   methods: {
