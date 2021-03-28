@@ -9,11 +9,11 @@ export default {
       let oldProduct = state.cartList.find(item => item.iid === payload.iid)
       if (oldProduct) {
         commit(ADD_COUNTER, oldProduct)
-        resolve('商品数量+1')
+        resolve('当前的商品数量+1')
       } else {
         payload.count = 1
         commit(ADD_TO_CART, payload)
-        resolve('添加商品到购物车')
+        resolve('添加该商品到购物车')
       }
     })
   }
