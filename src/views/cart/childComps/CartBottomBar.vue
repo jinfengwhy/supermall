@@ -2,8 +2,8 @@
   <div class="bottom-bar">
     <div class="check-content">
       <check-button class="check-button"
-        :isChecked="isCheckAll"
-        @click.native='btnClick'/>
+        :isChecked="isSelectAll"
+        @click.native='checkClick'/>
       <span>全选</span>
     </div>
     <div class="sum-price">
@@ -36,19 +36,17 @@ export default {
     checkLength() {
       return this.cartList.filter(item => item.checked).length
     },
-    isCheckAll() {
-      if (this.cartList.length === 0) return
+    isSelectAll() {
+      if (this.cartList.length === 0) return false
       // 全选中 find返回false 取反为true
       // 大于等于1个未选中 find返回true 取反为false
       return !this.cartList.find(item => !item.checked)
     }
   },
   methods: {
-    btnClick() {
-      let flag = !this.$store.state.every(item => item.checked)
-      this.$store.state.cartList.map(item => {
-        item.checked = flag
-      })
+    checkClick() {
+      let flag = !this.isSelectAll
+      this.cartList.map(item => item.checked = flag)
     }
   }
 }
