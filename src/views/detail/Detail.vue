@@ -34,6 +34,8 @@ import GoodsList from 'components/content/Goods/GoodsList'
 import {itemListenerMixin, backTopMixin} from 'common/mixin'
 import {debounce} from 'common/utils'
 
+import {mapActions} from 'vuex'
+
 export default {
   name: 'Detail',
   data() {
@@ -107,6 +109,11 @@ export default {
     this.$bus.$off('itemImgLoad', this.itemImgListener)
   },
   methods: {
+    // 映射actions中的addCart方法到子组件中
+    ...mapActions(['addCart']),
+    // ...mapActions({
+    //   'add': 'addCart'
+    // }),
     imageLoad() {
       // 直接调用混入对象中的newRefresh
       this.newRefresh()
@@ -143,7 +150,14 @@ export default {
       product.price = this.goods.realPrice
 
       // 2. 添加到vuex当中
-      this.$store.dispatch('addCart', product)
+      // this.$store.dispatch('addCart', product).then(res => {
+      //   console.log(res);
+      // })
+      // 内部还是调用上面的方法
+      this.addCart(product).then(res => {
+        console.log('---');
+        console.log(res);
+      })
     }
   }
 }
