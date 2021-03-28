@@ -13,6 +13,7 @@
     </scroll>
     <detail-bottom-bar @addToCart="addToCart"/>
     <back-top v-show="isShowBackTop" @click.native="backClick"/>
+    <toast :message='message' :show='show'/>
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import DetailBottomBar from './childComps/DetailBottomBar'
 
 import Scroll from 'components/common/scroll/Scroll'
 import GoodsList from 'components/content/Goods/GoodsList'
+import Toast from 'components/common/toast/Toast'
 
 import {itemListenerMixin, backTopMixin} from 'common/mixin'
 import {debounce} from 'common/utils'
@@ -50,7 +52,9 @@ export default {
       recommends: [],
       themeTopYs: [],
       getThemeTopYs: null,
-      currentIndex: 0
+      currentIndex: 0,
+      message: '',
+      show: false
     }
   },
   mixins: [itemListenerMixin, backTopMixin],
@@ -63,6 +67,7 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     DetailBottomBar,
+    Toast,
     Scroll,
     GoodsList
   },
@@ -155,8 +160,11 @@ export default {
       // })
       // 内部还是调用上面的方法
       this.addCart(product).then(res => {
-        console.log('---');
-        console.log(res);
+        this.message = res
+        this.show = true
+        setTimeout(() => {
+          this.show = false
+        }, 1500)
       })
     }
   }
